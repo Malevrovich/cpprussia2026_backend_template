@@ -1,6 +1,7 @@
 # Build directories (needed for copying binaries)
 build/
 build_*/
+build*
 _service/build/
 
 # Git
