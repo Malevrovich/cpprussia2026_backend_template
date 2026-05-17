@@ -10,8 +10,29 @@
 1. **Изучите структуру проекта** (описана ниже).
 2. **Соберите фронтенд** (инструкция в разделе «Подготовка»).
 3. **Реализуйте шесть микросервисов** согласно документации в папке `docs/`.
-4. **Интегрируйте каждый сервис** в общую систему (Docker Compose, Nginx, CMake).
+4. **Интегрируйте каждый сервис** в общую систему (Docker Compose, Nginx).
 5. **Запустите весь стек** и убедитесь, что мессенджер работает.
+
+---
+
+## Изучение фреймворка userver
+
+Перед началом работы с микросервисами рекомендуется ознакомиться с фреймворком **userver**, на котором они будут реализованы.
+
+**Документация userver:** https://userver.tech/de/d6a/md_en_2index.html
+
+### Рекомендуемые статьи к изучению:
+
+**Основы:**
+1. **Введение в IO-bound корутины** – https://userver.tech/d7/d08/md_en_2userver_2intro__io__bound__coro.html
+2. **Основы userver** – https://userver.tech/d8/d00/md_en_2userver_2intro.html
+3. **Создание HTTP-сервиса** – https://userver.tech/da/d16/md_en_2userver_2tutorial_2hello__service.html
+4. **Система компонентов** – https://userver.tech/dc/dcc/md_en_2userver_2component__system.html
+
+**Опциональные (для углубленного изучения):**
+- **Работа с PostgreSQL** – https://userver.tech/d4/d31/md_en_2userver_2tutorial_2postgres__service.html
+- **Кэширование** – https://userver.tech/d5/d2d/md_en_2userver_2caches.html
+- **Функциональное тестирование** – https://userver.tech/df/d07/md_en_2userver_2functional__testing.html
 
 ---
 
@@ -20,7 +41,6 @@
 ```
 cpprussia2026_template/
 ├── backend/                    # Директория для микросервисов
-│   ├── CMakeLists.txt         # CMake‑конфигурация каждого сервиса (внутри поддиректорий)
 │   └── Dockerfile             # Docker‑образ для бекенда
 ├── frontend/                  # Готовый фронтенд на Vue.js
 │   ├── src/
@@ -284,12 +304,3 @@ coro_pool:
 - Проверьте, что сервис раскомментирован в `docker-compose.yml` и `nginx/nginx.conf`.
 - Убедитесь, что сервис запущен: `sudo docker compose ps`.
 - Посмотрите логи Nginx: `sudo docker compose logs nginx`.
-
----
-
-## Полезные ссылки
-
-- [Документация по сборке userver](https://userver.tech/de/dab/md_en_2userver_2build_2build.html)
-- [Туториал «Hello World» на userver](https://userver.tech/da/d16/md_en_2userver_2tutorial_2hello__service.html)
-- [Официальный сайт userver](https://userver.tech)
-
