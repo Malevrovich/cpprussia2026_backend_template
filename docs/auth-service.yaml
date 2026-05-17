@@ -62,6 +62,35 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/V1Error'
 
+    /v1/auth/public-key:
+        get:
+            summary: Получить публичный ключ для верификации JWT
+            description: |
+                Returns the RSA public key used to sign JWT tokens.
+
+                Other services can use this key to verify JWT tokens locally (offline)
+                without making additional requests to the auth service on every incoming
+                request. The key is PEM-encoded and intended to be cached by clients.
+
+                Best practices:
+                - Cache the key on the client side (e.g., for 1 hour)
+                - Re-fetch on signature verification failure (possible key rotation)
+                - Use `algorithm` field to select the correct verification routine
+            operationId: getPublicKey
+            responses:
+                '200':
+                    description: Public key retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/V1PublicKeyResponse'
+                '500':
+                    description: Internal server error
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/V1Error'
+
     /v1/user/authorization:
         post:
             summary: Авторизация пользователя
@@ -250,3 +279,37 @@ components:
             properties:
                 current_user:
                     $ref: '#/components/schemas/V1AuthorizedUser'
+
+        V1PublicKeyResponse:
+            description: |
+                RSA public key for JWT token verification.
+
+                Returned by `GET /v1/auth/public-key`. Other services use this key
+                to verify the signature of JWT tokens issued by the auth service
+                without making per-request calls to the auth service.
+            type: object
+            additionalProperties: false
+            required:
+              - public_key
+              - algorithm
+            properties:
+                public_key:
+                    description: PEM-encoded RSA public key (SubjectPublicKeyInfo / X.509 format)
+                    type: string
+                    example: |
+                        -----BEGIN PUBLIC KEY-----
+                        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
+                        -----END PUBLIC KEY-----
+                algorithm:
+                    description: JWT signing algorithm used with this key
+                    type: string
+                    enum:
+                      - RS256
+                    example: "RS256"
+                kid:
+                    description: |
+                        Optional key identifier. If present, JWT tokens issued by the auth
+                        service include the same `kid` value in their header, allowing
+                        clients to support key rotation.
+                    type: string
+                    example: "2026-05-17"
