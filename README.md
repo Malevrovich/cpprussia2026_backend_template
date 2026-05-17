@@ -226,6 +226,44 @@ sudo docker compose build
 
 ---
 
+## Настройка clangd для работы с кодом
+
+Для удобной работы с кодом в VS Code рекомендуется настроить clangd — языковой сервер для C++, который обеспечивает автодополнение, навигацию по коду и подсветку ошибок.
+
+### Шаг 1. Добавление файла .clangd
+
+После создания сервиса добавьте в его директорию файл `.clangd` со следующим содержимым:
+
+```yaml
+CompileFlags:
+    CompilationDatabase: build-release
+```
+
+Этот файл уже присутствует в примерах `example_service` и `example2`. Вы можете скопировать его из `backend/example_service/.clangd` или создать вручную.
+
+### Шаг 2. Генерация compile_commands.json
+
+Перед использованием clangd необходимо сгенерировать базу компиляции. Для этого выполните:
+
+```bash
+cd backend/<service_name>
+make cmake-release
+```
+
+Эта команда создаст директорию `build-release` с файлом `compile_commands.json`, который clangd использует для анализа кода.
+
+### Шаг 3. Перезагрузка VS Code
+
+После генерации базы компиляции перезагрузите окно VS Code:
+
+1. Нажмите `Ctrl+Shift+P`
+2. Введите "Reload Window"
+3. Выберите команду "Developer: Reload Window"
+
+Теперь clangd будет корректно работать с вашим сервисом, предоставляя автодополнение и навигацию по коду.
+
+---
+
 ## Частые проблемы и их решение
 
 ### Ошибка инициализации StackUsageMonitor
@@ -254,3 +292,4 @@ coro_pool:
 - [Документация по сборке userver](https://userver.tech/de/dab/md_en_2userver_2build_2build.html)
 - [Туториал «Hello World» на userver](https://userver.tech/da/d16/md_en_2userver_2tutorial_2hello__service.html)
 - [Официальный сайт userver](https://userver.tech)
+
